@@ -1,66 +1,32 @@
-## Foundry
+# Foundry-Scroll演示
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+在此示例中，我们将在 Sepolia 或 Scroll 上启动虚拟智能合约，并从相反的链与其进行交互。我们将使用`ScrollMessenger`部署在 Sepolia 和 Scroll 上的
 
-Foundry consists of:
+# 准备
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+1 : 安装foudnry
+  
+**`curl -L https://foundry.paradigm.xyz | bash`**
 
-## Documentation
+2 : 安装scroll包
+  
+**`npm install @scroll-tech/contracts`**
 
-https://book.getfoundry.sh/
+## 部署合约
+一 ： 通过运行以下命令设置环境变量：
+**`export RPC_URL=<你的 RPC 端点>`**
+**`export PRIVATE_KEY=<你的钱包私钥>`**
 
-## Usage
+二 ： 编译
+**`forge build`**
 
-### Build
+三：部署
+**`forge create --rpc-url=$RPC_URL --private-key=$PRIVATE_KEY ./src/L1.sol:GreeterOperator `**
 
-```shell
-$ forge build
-```
+**`forge create --rpc-url=$RPC_URL --private-key=$PRIVATE_KEY ./src/L2.sol:Greeter`**
 
-### Test
+四 ： 调用
+**`cast send --value 0.01ether  GreeterOperator合约地址 "executeFunctionCrosschain(address,address,uint256,string,uint32)" scrollMessengerAddress Greeter合约地址 0 "This message was cross-chain!" 1000000`**
 
-```shell
-$ forge test
-```
-
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+  `scrollMessengerAddress`：这取决于您部署`GreeterOperator`合约的位置
+    -   如果您将其部署在 Sepolia 上，请使用`0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A`.如果您部署在 Scroll Sepolia 上，请使用`0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d`.
